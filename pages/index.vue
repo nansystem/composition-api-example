@@ -1,9 +1,20 @@
 <template>
   <div>
-    <p>ユーザー件数: {{ userNum }}</p>
-    <ul>
-      <li v-for="u in data.users" :key="u.id">{{ u.id }} {{ u.name }}</li>
-    </ul>
+    <form @submit.prevent>
+      <div>
+        <label for="name">お名前</label>
+        <input id="name" v-model="data.form.name" type="text" />
+      </div>
+      <div>
+        <button @click="addUser">ユーザー追加</button>
+      </div>
+    </form>
+    <div style="margin-top: 16px">
+      <p>ユーザー件数: {{ userNum }}</p>
+      <ul>
+        <li v-for="u in data.users" :key="u.id">{{ u.id }} {{ u.name }}</li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -13,6 +24,9 @@ import { defineComponent, reactive, computed } from '@nuxtjs/composition-api'
 export default defineComponent({
   setup() {
     const data = reactive({
+      form: {
+        name: '',
+      },
       users: [
         { id: 1, name: '加藤かな' },
         { id: 2, name: '田中紘一' },
@@ -20,8 +34,15 @@ export default defineComponent({
       ],
     })
     const userNum = computed(() => data.users.length)
+    const addUser = () => {
+      const id = Math.max(...data.users.map(u=>u.id)) + 1
+      data.users.push({id, name: data.form.name})
+      data.form.name = ''
+    }
+
     return {
       data,
+      addUser,
       userNum,
     }
   },
