@@ -1,5 +1,6 @@
 <template>
   <div>
+    <p>ユーザー件数: {{ userNum }}</p>
     <ul>
       <li v-for="u in data.users" :key="u.id">{{ u.id }} {{ u.name }}</li>
     </ul>
@@ -7,7 +8,7 @@
 </template>
 
 <script lang="js">
-import { defineComponent, reactive } from '@nuxtjs/composition-api'
+import { defineComponent, reactive, computed } from '@nuxtjs/composition-api'
 
 export default defineComponent({
   setup() {
@@ -18,8 +19,10 @@ export default defineComponent({
         { id: 3, name: '山田太郎' },
       ],
     })
+    const userNum = computed(() => data.users.length)
     return {
-      data
+      data,
+      userNum,
     }
   },
 })
