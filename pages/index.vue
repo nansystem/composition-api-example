@@ -1,30 +1,28 @@
 <template>
   <div>
-    <form @submit.prevent>
-      <div>
-        <label for="email">email</label>
-        <input id="email" ref="emailInput" type="text" />
-      </div>
-    </form>
+    <UserList :users="data.users" />
   </div>
 </template>
 
 <script lang="js">
-import { defineComponent, onMounted, ref } from '@nuxtjs/composition-api'
+import { defineComponent, reactive } from '@nuxtjs/composition-api'
 
 export default defineComponent({
   setup() {
-    const emailInput = ref(null);
-
-    onMounted(()=>{
-      // composition api以前は this.$refs.emailInputで取得していた
-      console.info("mounted!!", emailInput.value)
-      emailInput.value.focus()
+    const data = reactive({
+      users: [
+        { id: 1, name: '加藤かな' },
+        { id: 2, name: '田中紘一' },
+        { id: 3, name: '山田太郎' },
+      ],
     })
-    console.info("before mount", emailInput.value)
+
+    setTimeout(() => {
+      data.users.push({ id: 4, name: '木下武' })
+    }, 3000);
 
     return {
-      emailInput,
+      data
     }
   },
 })
