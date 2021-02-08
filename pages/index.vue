@@ -1,37 +1,30 @@
 <template>
   <div>
-    <div style="margin-top: 16px">
-      <p>ユーザー件数: {{ userNum }}</p>
-      <ul>
-        <li v-for="u in data.users" :key="u.id">{{ u.id }} {{ u.name }}</li>
-      </ul>
-    </div>
+    <form @submit.prevent>
+      <div>
+        <label for="email">email</label>
+        <input id="email" ref="emailInput" type="text" />
+      </div>
+    </form>
   </div>
 </template>
 
 <script lang="js">
-import { defineComponent, reactive, computed } from '@nuxtjs/composition-api'
+import { defineComponent, onMounted, ref } from '@nuxtjs/composition-api'
 
 export default defineComponent({
   setup() {
-    const data = reactive({
-      users: [],
+    const emailInput = ref(null);
+
+    onMounted(()=>{
+      // composition api以前は this.$refs.emailInputで取得していた
+      console.info("mounted!!", emailInput.value)
+      emailInput.value.focus()
     })
-
-    const userNum = computed(() => data.users.length)
-
-    // created ... DOMにさわれない。APIからデータ取得する処理などを書く
-    setTimeout(() => {
-      data.users.push(...[
-        { id: 1, name: '加藤かな' },
-        { id: 2, name: '田中紘一' },
-        { id: 3, name: '山田太郎' },
-      ])
-    }, 3000);
+    console.info("before mount", emailInput.value)
 
     return {
-      data,
-      userNum,
+      emailInput,
     }
   },
 })
