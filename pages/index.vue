@@ -1,38 +1,37 @@
 <template>
   <div>
-    <form @submit.prevent>
-      <div>
-        <label for="name">お名前</label>
-        <input id="name" v-model="form.name" type="text" />
-      </div>
-      <div>
-        <label for="email">email</label>
-        <input id="email" v-model="form.email" type="text" />
-      </div>
-    </form>
+    <div style="margin-top: 16px">
+      <p>ユーザー件数: {{ userNum }}</p>
+      <ul>
+        <li v-for="u in data.users" :key="u.id">{{ u.id }} {{ u.name }}</li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script lang="js">
-import { defineComponent, reactive, watch } from '@nuxtjs/composition-api'
+import { defineComponent, reactive, computed } from '@nuxtjs/composition-api'
 
 export default defineComponent({
   setup() {
-    const form = reactive({
-      name: '',
-      email: '',
+    const data = reactive({
+      users: [],
     })
 
-    watch(
-      () => form.name,
-      (currentName, prevName) => {
-        console.info('currentName: ', currentName, 'prevName: ', prevName)
-      },
-      { deep: true},
-    )
+    const userNum = computed(() => data.users.length)
+
+    // created ... DOMにさわれない。APIからデータ取得する処理などを書く
+    setTimeout(() => {
+      data.users.push(...[
+        { id: 1, name: '加藤かな' },
+        { id: 2, name: '田中紘一' },
+        { id: 3, name: '山田太郎' },
+      ])
+    }, 3000);
 
     return {
-      form,
+      data,
+      userNum,
     }
   },
 })
